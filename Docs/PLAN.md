@@ -1,1 +1,1 @@
-Plan file. Can also be a PDF or something else. Just make sure to name PLAN with all caps
+[Plan.md](https://docs.google.com/document/d/15_hHPI3cDQl5lOGq2N6cGxa3AP8GpXQxp_ieFhrqny4/edit?usp=sharing)
