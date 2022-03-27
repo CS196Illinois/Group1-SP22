@@ -3,6 +3,21 @@ import requests
 import json
 
 app = Flask(__name__)
+
+def operationfilter(dict):
+    filtered = {}
+    for res in dict["results"]:
+        if res["business_status"] == "OPERATIONAL":
+            filtered[res["name"]] = res
+    return filtered
+
+def openingfilter(dict):
+    filtered = {}
+    for res in dict["results"]:
+        if res["opening_hours"]["open_now"] == True:
+            filtered[res["name"]] = res
+    return filtered
+
 @app.route("/")
 def home():
     return "home"
@@ -13,4 +28,4 @@ def rest():
     r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=Chinese&location=40.110740,-88.219940&language=en&radius=500&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     res = r.text
     data = json.loads(res)
-    return data
+    return openingfilter(data)
