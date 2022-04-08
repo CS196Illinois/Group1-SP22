@@ -1,16 +1,25 @@
 from flask import Flask, redirect, render_template, request
 import requests
+import json
 
 app = Flask(__name__)
 
-@app.route("/temperature", methods=["POST"])
-def temperature():
-    zipcode = request.form["zip"]
-    r = requests.get("http://api.openweathermap.org/data/2.5/weather?zip="+zipcode+",us&appid=192fba108273b0985d9f580e8ad91e0f")
-    json_object = r.json()
-    temp_k = float(json_object['main']['temp'])
-    temp_f = (temp_k - 273.15) * 1.8 + 32
-    return render_template('temperature.html', temp = temp_f)
+API_KEY = "AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE"
+
+@app.route("/getDirectionTime", methods=["POST"])
+def getDirection(currentLoc, destLoc):
+    url = "https://maps.googleapis.com/maps/api/directions/json?"
+    r = requests.get(url + "origin=" + currentLoc + "&destination=place_id:" + destLoc + "&key=" + API_KEY)
+    directions = json.loads(r)
+    return directions
+
+def getDirection(currentLoc, destLoc):
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
+    r = requests.get(url + "origin=" + currentLoc + "&destination=place_id:" + destLoc + "&key=" + API_KEY)
+    time = r.json()["rows"][0]["elements"][0]["duration"]["text"]
+    seconds = r.json()["rows"][0]["elements"][0]["duration"]["value"]
+    
+    return "\n Total duration will be around", time
 
 @app.route("/")
 def index():
