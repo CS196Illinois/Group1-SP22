@@ -4,68 +4,67 @@ import json
 
 app = Flask(__name__)
 
-def operationfilter(dict):
-    filtered = {}
-    for res in dict["results"]:
+def operationfilter(reslist):
+    filtered = []
+    for res in reslist:
         if res["business_status"] == "OPERATIONAL":
-            filtered[res["name"]] = res
+            filtered.append(res)
     return filtered
 
-def openingfilter(dict):
-    filtered = {}
-    for res in dict["results"]:
+def openingfilter(reslist):
+    filtered = []
+    for res in reslist:
         if res["opening_hours"]["open_now"] == True:
-            filtered[res["name"]] = res
+            filtered.append(res)
     return filtered
 
-def higherpricefilter(dict,pricelevel):
-    filtered = {}
-    for res in dict["results"]:
+def higherpricefilter(reslist,pricelevel):
+    filtered = []
+    for res in reslist:
         if res["price_level"] >= pricelevel:
-            filtered[res["name"]] = res
+            filtered.append(res)
     return filtered
 
 
-def lowerpricefilter(dict,pricelevel):
-    filtered = {}
-    for res in dict["results"]:
+def lowerpricefilter(reslist,pricelevel):
+    filtered = []
+    for res in reslist:
         if res["price_level"] <= pricelevel:
-            filtered[res["name"]] = res
+            filtered.append(res)
     return filtered
 
-def ratingfilter(dict,rating):
-    filtered = {}
-    for res in dict["results"]:
+def ratingfilter(reslist,rating):
+    filtered = []
+    for res in reslist:
         if res["rating"] >= rating:
-            filtered[res["name"]] = res
+            filtered.append(res)
     return filtered
 
-def placeID(dict,rating):
-    IDs = {}
-    for res in dict["results"]:
-        IDs[res["name"]] = res["place_id"]
+def placeID(reslist):
+    IDs = []
+    for res in reslist:
+        IDs.append(res.place_id + ":" + res.name)
     return IDs
 
-def request(keyword="none",radius=1000):
-    if keyword == "none":
-        r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + str(radius) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
+def request(body):
+    if "keyword" not in body.keys:
+        r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + str(body["radius"]) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     else:
-        r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=" + keyword + "&location=40.110740,-88.219940&language=en&radius=" + str(radius) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
+        r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=" + body["keyword"] + "&location=40.110740,-88.219940&language=en&radius=" + str(body["radius"]) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     res = r.text
     data = json.loads(res)
-    return data
+    reslist = []
+    for res in data["results"]:
+        reslist.append(res)
+    return reslist
 
 @app.route("/")
 def home():
     return "home"
 
 @app.route("/restaurant")
-def rest():
-    return request()
-
-@app.route("/restaurant/<kw>")
-def keysearch(kw):
-    return ratingfilter(request(keyword=kw),4.0)
+def rest(body):
+    return request(body)
 
 @app.route("/restaurant/rating/<rating>")
 def rate(rating):
