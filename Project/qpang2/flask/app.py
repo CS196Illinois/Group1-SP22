@@ -4,6 +4,21 @@ import json
 
 app = Flask(__name__)
 
+API_KEY = "AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE"
+
+def getTimeDuration(currentLoc, destLoc, mode = "walking"):
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
+    r = requests.get(url + "origin=" + currentLoc + "&destination=" + destLoc + "&mode=" + mode + "&key=" + API_KEY)
+    data = json.loads(r.text)
+    return data["rows"]["elements"]["duration"]["value"]
+    
+def getTimeDurationOnFront(currentLoc, destLoc, mode = "walking"):
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
+    r = requests.get(url + "origin=" + currentLoc + "&destination=place_id:" + destLoc + "&mode=" + mode + "&key=" + API_KEY)
+    time = r.json()["rows"][0]["elements"][0]["duration"]["text"]
+    seconds = r.json()["rows"][0]["elements"][0]["duration"]["value"]
+    return "\n Total duration will be around", time
+
 def operationfilter(reslist):
     filtered = []
     for res in reslist:
@@ -60,7 +75,7 @@ def request(body):
 
 @app.route("/")
 def home():
-    return "home"
+    return getTimeDuration("1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL")
 
 @app.route("/restaurant")
 def rest(body):
