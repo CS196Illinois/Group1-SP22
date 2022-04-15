@@ -8,9 +8,9 @@ API_KEY = "AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE"
 
 def getTimeDuration(currentLoc, destLoc, mode = "walking"):
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
-    r = requests.get(url + "origin=" + currentLoc + "&destination=" + destLoc + "&mode=" + mode + "&key=" + API_KEY)
+    r = requests.get(url + "origins=" + currentLoc + "&destinations=" + destLoc + "&mode=" + mode + "&key=" + API_KEY)
     data = json.loads(r.text)
-    return data["rows"]["elements"]["duration"]["value"]
+    return str(data["rows"][0]["elements"][0]["duration"]["value"])
     
 def getTimeDurationOnFront(currentLoc, destLoc, mode = "walking"):
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
