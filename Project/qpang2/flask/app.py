@@ -19,6 +19,16 @@ def getTimeDurationOnFront(currentLoc, destLoc, mode = "walking"):
     seconds = r.json()["rows"][0]["elements"][0]["duration"]["value"]
     return "\n Total duration will be around", time
 
+def timefilter(reslist, currentLoc, destLoc, eatingtime, startingtime, endtime, mode = "walking"):
+    filtered = []
+    duration = endtime - startingtime
+    for res in reslist:
+        totaltime = (int(getTimeDuration(currentLoc, "place_id:" + res["place_id"])) + int(getTimeDuration("place_id:" + res["place_id"],destLoc))) / 60 + eatingtime 
+        if totaltime < duration:
+            filtered.append(res)
+    return filtered
+
+
 def operationfilter(reslist):
     filtered = []
     for res in reslist:
@@ -73,13 +83,22 @@ def request(body):
         reslist.append(res)
     return reslist
 
+def requesttest():
+    r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + "1000" + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
+    res = r.text
+    data = json.loads(res)
+    reslist = []
+    for res in data["results"]:
+        reslist.append(res)
+    return reslist
+
 @app.route("/")
 def home():
     return getTimeDuration("1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL")
 
 @app.route("/restaurant")
-def rest(body):
-    return request(body)
+def rest():
+    return str(timefilter(requesttest(),"1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL", 15, 50, 90))
 
 @app.route("/restaurant/rating/<rating>")
 def rate(rating):
