@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, make_response
 import requests
 import json
 
@@ -81,10 +81,18 @@ def request(body):
     reslist = []
     for res in data["results"]:
         reslist.append(res)
+    if "rating" in body.keys:
+        reslist = ratingfilter(reslist, float(body["rating"]))
+    if "lowerprice" in body.keys:
+        reslist = lowerpricefilter(reslist, float(body["lowerprice"]))
+    if "higherprice" in body.keys:
+        reslist = higherpricefilter(reslist, float(body["higherprice"]))
+    if "timeinfo" in body.keys:
+        reslist = timefilter(reslist, body["timeinfo"]["currentloc"], body["timeinfo"]["destloc"], body["timeinfo"]["eatingtime"], body["timeinfo"]["starttime"], body["timeinfo"]["endtime"])
     return reslist
 
 def requesttest():
-    r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + "1000" + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
+    r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + "100" + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     res = r.text
     data = json.loads(res)
     reslist = []
@@ -94,11 +102,11 @@ def requesttest():
 
 @app.route("/")
 def home():
-    return getTimeDuration("1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL")
+    return str(timefilter(requesttest(),"1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL", 15, 50, 90))
 
 @app.route("/restaurant")
-def rest():
-    return str(timefilter(requesttest(),"1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL", 15, 50, 90))
+def rest(body):
+    return make_response(jsonify(request(body)))
 
 @app.route("/restaurant/rating/<rating>")
 def rate(rating):
