@@ -148,7 +148,7 @@ def sortByDistanceFar(reslist, currentLoc, destLoc):
 
 def sortByDistanceClose(reslist, currentLoc, destLoc):
     return sortByDistanceFar(reslist, currentLoc, destLoc).reverse()
-    
+
 # main
 
 def request(body):
