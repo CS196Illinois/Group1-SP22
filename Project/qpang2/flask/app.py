@@ -84,6 +84,8 @@ def placeID(reslist):
 # sort functions are lisdted
 # called after options are filtered, for display
 
+# general sort for all
+
 def sortByName(reslist):
     sorted = reslist
     swapped = True
