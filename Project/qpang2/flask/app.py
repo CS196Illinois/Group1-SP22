@@ -19,6 +19,9 @@ def getTimeDurationOnFront(currentLoc, destLoc, mode = "walking"):
     seconds = r.json()["rows"][0]["elements"][0]["duration"]["value"]
     return "\n Total duration will be around", time
 
+# options to fileters are listed 
+# called after the data is received and casted from request
+
 def timefilter(reslist, currentLoc, destLoc, eatingtime, startingtime, endtime, mode = "walking"):
     filtered = []
     duration = endtime - startingtime
@@ -70,11 +73,75 @@ def ratingfilter(reslist,rating):
             filtered.append(res)
     return filtered
 
+# unique PlaceID generatings
+
 def placeID(reslist):
     IDs = []
     for res in reslist:
         IDs.append(res.place_id + ":" + res.name)
     return IDs
+
+# sort functions are lisdted
+# called after options are filtered, for display
+
+def sortByName(reslist):
+    return reslist.sort()
+
+def sortByNameReverse(reslist):
+    return reslist.sort(reverse=True)
+
+def sortByPriceHigh(reslist):
+    sorted = []
+    copy = sortByName(reslist)
+    while len(copy) != 0:
+        prevPrice = 0
+        index = 0
+        for res in copy:
+            if res["price_level"] > prevPrice:
+                prevPrice = res["price_level"]
+                index = copy.index(res)
+        sorted.append(copy[index])
+        copy.remove(index)
+    return sorted
+
+def sortByPriceLow(reslist):
+    return sortByPriceHigh(reslist).reverse()
+
+def sortByRateHigh(reslist):
+    sorted = []
+    copy = sortByName(reslist)
+    while len(copy) != 0:
+        prevRate = 0
+        index = 0
+        for res in copy:
+            if res["rating"] > prevRate:
+                prevRate = res["rating"]
+                index = copy.index(res)
+        sorted.append(copy[index])
+        copy.remove(index)
+    return sorted
+
+def sortByRateLow(reslist):
+    return sortByRateHigh(reslist).reverse()
+
+def sortByDistanceFar(reslist, currentLoc, destLoc):
+    sorted = []
+    copy = sortByName(reslist)
+    while len(copy) != 0:
+        prevDuration = 0
+        index = 0
+        for res in copy:
+            if getTimeDuration(currentLoc, destLoc) > prevDuration:
+                prevDuration = getTimeDuration(currentLoc, destLoc)
+                index = copy.index(res)
+        sorted.append(copy[index])
+        copy.remove(index)
+    return sorted
+
+def sortByDistanceClose(reslist, currentLoc, destLoc):
+    return sortByDistanceFar(reslist, currentLoc, destLoc).reverse()
+    
+# main
 
 def request(body):
     if "keyword" not in body.keys:
