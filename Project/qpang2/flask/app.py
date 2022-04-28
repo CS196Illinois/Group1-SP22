@@ -23,8 +23,13 @@ def timefilter(reslist, currentLoc, destLoc, eatingtime, startingtime, endtime, 
     filtered = []
     duration = endtime - startingtime
     for res in reslist:
-        totaltime = (int(getTimeDuration(currentLoc, "place_id:" + res["place_id"])) + int(getTimeDuration("place_id:" + res["place_id"],destLoc))) / 60 + eatingtime 
+        firsttime = int(getTimeDuration(currentLoc, "place_id:" + res["place_id"])) /60
+        secondtime = int(getTimeDuration("place_id:" + res["place_id"],destLoc)) /60
+        totaltime =  firsttime + secondtime + eatingtime
         if totaltime < duration:
+            res["ToResTime"] = firsttime
+            res["ToDesTime"] = secondtime
+            res["TotalTime"] = totaltime
             filtered.append(res)
     return filtered
 
