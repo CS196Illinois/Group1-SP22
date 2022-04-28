@@ -85,10 +85,18 @@ def placeID(reslist):
 # called after options are filtered, for display
 
 def sortByName(reslist):
-    return reslist.sort()
+    sorted = reslist
+    swapped = True
+    while(swapped):
+        swapped = False
+        for i in range(len(reslist) - 1):
+            if sorted[i]["name"] > sorted[i + 1]["name"]:
+                sorted[i], sorted[i + 1] = sorted[i + 1], sorted[i]
+                swapped = True
+    return sorted
 
 def sortByNameReverse(reslist):
-    return reslist.sort(reverse=True)
+    return sortByName(reslist).reverse()
 
 def sortByPriceHigh(reslist):
     sorted = []
