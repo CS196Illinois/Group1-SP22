@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, make_response
+from flask import Flask, render_template, jsonify, make_response, request
 import requests
 import json
 
@@ -153,7 +153,7 @@ def sortByDistanceClose(reslist, currentLoc, destLoc):
 
 # main
 
-def request(body):
+def respondRequest(body):
     if "keyword" not in body.keys:
         r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + str(body["radius"]) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     else:
@@ -186,10 +186,13 @@ def requesttest():
 def home():
     return str(timefilter(requesttest(),"1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL", 15, 50, 90))
 
-@app.route("/restaurant")
-def rest(body):
-    return make_response(jsonify(request(body)))
+@app.route("/restaurant", methods=['GET'])
+def rest():
+    data = request.get_json()
+    print(data)
+    responsedata = respondRequest(data)
+    return make_response(jsonify(responsedata),200)
 
 @app.route("/restaurant/rating/<rating>")
 def rate(rating):
-    return ratingfilter(request(),float(rating))
+    return ratingfilter(respondRequest(),float(rating))
