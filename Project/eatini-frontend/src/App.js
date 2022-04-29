@@ -1,4 +1,5 @@
 import React from 'react';
+import DisplayRlist from './Components/DisplayRlist';
 import Rlist from "./Components/Rlist";
 
 
@@ -8,7 +9,7 @@ function App() {
       <div className = "content">
         {/* <Rlist title="name"></Rlist>
         <Rlist typeOfR="type"></Rlist> */}
-        <Rlist />
+        <DisplayRlist />
       </div>
     </div>
   );
