@@ -32,7 +32,7 @@ var ToToM = "dis";
 export default function Test() {
     return (
       <div style={{ display: 'block', width:"400", padding: 20 }}>
-        <h4>React-Bootstrap Col Component</h4>
+        <h4>🌟 You can consider about going to these restaurants 🌟</h4>
         <Row>
           <Col style={{
             width: "900",
