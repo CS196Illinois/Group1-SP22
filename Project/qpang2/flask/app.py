@@ -12,13 +12,6 @@ def getTimeDuration(currentLoc, destLoc, mode = "walking"):
     r = requests.get(url + "origins=" + currentLoc + "&destinations=" + destLoc + "&mode=" + mode + "&key=" + API_KEY)
     data = json.loads(r.text)
     return str(data["rows"][0]["elements"][0]["duration"]["value"])
-    
-def getTimeDurationOnFront(currentLoc, destLoc, mode = "walking"):
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
-    r = requests.get(url + "origin=" + currentLoc + "&destination=place_id:" + destLoc + "&mode=" + mode + "&key=" + API_KEY)
-    time = r.json()["rows"][0]["elements"][0]["duration"]["text"]
-    seconds = r.json()["rows"][0]["elements"][0]["duration"]["value"]
-    return "\n Total duration will be around", time
 
 # options to fileters are listed 
 # called after the data is received and casted from request
@@ -193,7 +186,7 @@ def respondRequest(body):
     return reslist
 
 def requesttest():
-    r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + "100" + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
+    r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + "2000" + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     res = r.text
     data = json.loads(res)
     reslist = []
@@ -203,9 +196,9 @@ def requesttest():
 
 @app.route("/")
 def home():
-    return str(timefilter(requesttest(),"1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL", 15, 50, 90))
+    return str(sortByRate(requesttest()))
 
-@app.route("/restaurant", methods=['GET'])
+@app.route("/restaurant", methods=['POST'])
 def rest():
     data = request.get_json()
     print(data)
