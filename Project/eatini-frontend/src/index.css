@@ -6,4 +6,38 @@
 }
 .container {
   display: flex; /* or inline-flex */
+  margin: 100 auto;
+}
+.create {
+  max-width: 200px;
+  margin: 3 auto;
+}
+.create label {
+  text-align: left;
+  font-size: 20px;
+  margin: 3 auto;
+  margin-bottom: 1px;
+  margin-top: 10px;
+  color: #f1356d;
+  display: block;
+}
+
+.create button {
+  background: #f1356d ;
+  color: cornsilk;
+  border: 5px;
+  font-size: 20px;
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create select {
+  width: 191px
+}
+
+.create input {
+  width: 191px
 }

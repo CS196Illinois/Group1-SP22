@@ -1,3 +1,6 @@
+import React from "react";
+import './App.css';
+import DisplayRlist from "../DisplayRlist";
 
 const Form = () => {
     return (
@@ -13,21 +16,21 @@ const Form = () => {
                     type="text"
                     required
                 />
-                <label>Time Range:</label>
-                <select>
-                    <option value=""
-                    required>
-                </option>
-                </select>
-                <label>to</label>
-                <select>
-                    <option value=""></option>
-                </select>
-                <label>Preferred Eating Time:</label>
-                <select>
-                    <option value=""></option>
-                </select>
-                <label>minutes</label>
+                <label>Start Time:</label>
+                <input
+                    type="text"
+                    required
+                />
+                <label>End Time:</label>
+                <input
+                    type="text"
+                    required
+                />
+                <label>Eating Time (minutes):</label>
+                <input
+                    type="text"
+                    required
+                />
                 <label>Cuisine:</label>
                 <select>
                     <option value=""></option>
