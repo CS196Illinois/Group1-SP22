@@ -1,3 +1,4 @@
+from random import normalvariate
 from flask import Flask, render_template, jsonify, make_response, request
 import requests
 import json
@@ -87,69 +88,74 @@ def placeID(reslist):
 # general sort for all
 
 def sortByName(reslist):
-    sorted = reslist
-    swapped = True
-    while(swapped):
-        swapped = False
-        for i in range(len(reslist) - 1):
-            if sorted[i]["name"] > sorted[i + 1]["name"]:
-               sorted[i], sorted[i + 1] = sorted[i + 1], sorted[i]
-               swapped = True
-    return sorted
+    sortedJson = sorted(reslist, key=lambda x: x["name"])
+    return sortedJson
 
 def sortByNameReverse(reslist):
-    return sortByName(reslist).reverse()
+    sortedJson = sorted(reslist, key=lambda x: x["name"], reverse=True)
+    return sortedJson
 
-def sortByPriceHigh(reslist):
-    sorted = []
-    copy = sortByName(reslist)
-    while len(copy) != 0:
-        prevPrice = 0
-        index = 0
-        for res in copy:
-            if res["price_level"] > prevPrice:
-                prevPrice = res["price_level"]
-                index = copy.index(res)
-        sorted.append(copy[index])
-        copy.remove(index)
-    return sorted
+def sortByPrice(reslist):
+    noPriceLev = []
+    copy = reslist
+    for res in reslist:
+        if "price_level" not in res:
+            noPriceLev.append(res)
+            copy.remove(res)
+            
+    copy = sortByName(copy)
+    sortedJson = sorted(copy, key=lambda x: x['price_level'])
+    sortedJson += noPriceLev
+    return sortedJson
 
-def sortByPriceLow(reslist):
-    return sortByPriceHigh(reslist).reverse()
+def sortByPriceReverse(reslist):
+    noPriceLev = []
+    copy = reslist
+    for res in reslist:
+        if "price_level" not in res:
+            noPriceLev.append(res)
+            copy.remove(res)
+            
+    copy = sortByName(copy)
+    sortedJson = sorted(copy, key=lambda x: x['price_level'], reverse=True)
+    sortedJson += noPriceLev
+    return sortedJson
 
-def sortByRateHigh(reslist):
-    sorted = []
-    copy = sortByName(reslist)
-    while len(copy) != 0:
-        prevRate = 0
-        index = 0
-        for res in copy:
-            if res["rating"] > prevRate:
-                prevRate = res["rating"]
-                index = copy.index(res)
-        sorted.append(copy[index])
-        copy.remove(index)
-    return sorted
+def sortByRate(reslist):
+    noRate = []
+    copy = reslist
+    for res in reslist:
+        if "rating" not in res:
+            noRate.append(res)
+            copy.remove(res)
 
-def sortByRateLow(reslist):
-    return sortByRateHigh(reslist).reverse()
+    copy = sortByName(copy)
+    sortedJson = sorted(copy, key=lambda x: x['rating'], reverse=True)
+    sortedJson += noRate
+    return sortedJson
 
-def sortByDistanceFar(reslist, currentLoc, destLoc):
-    sorted = []
-    copy = sortByName(reslist)
-    while len(copy) != 0:
-        prevDuration = 0
-        index = 0
-        for res in copy:
-            if getTimeDuration(currentLoc, destLoc) > prevDuration:
-                prevDuration = getTimeDuration(currentLoc, destLoc)
-                index = copy.index(res)
-        sorted.append(copy[index])
-        copy.remove(index)
-    return sorted
+def sortByRateReverse(reslist):
+    noRate = []
+    copy = reslist
+    for res in reslist:
+        if "rating" not in res:
+            noRate.append(res)
+            copy.remove(res)
 
-def sortByDistanceClose(reslist, currentLoc, destLoc):
-    return sortByDistanceFar(reslist, currentLoc, destLoc).reverse()
+    copy = sortByName(copy)
+    sortedJson = sorted(copy, key=lambda x: x['rating'])
+    sortedJson += noRate
+    return sortedJson
+
+def sortByTime(reslist):
+    reslist = sortByName(reslist)
+    sortedJson = sorted(reslist, key=lambda x: x['TotalTime'])
+    return sortedJson
+
+def sortByTimeReverse(reslist):
+    reslist = sortByName(reslist)
+    sortedJson = sorted(reslist, key=lambda x: x['TotalTime'], reverse=True)
+    return sortedJson
 
 # main
 
@@ -177,13 +183,13 @@ def respondRequest(body):
         if body["sortby"] == "name":
             reslist = sortByName(reslist)
         if body["sortby"] == "HighPrice":
-            reslist = sortByPriceHigh(reslist)
+            reslist = sortByPrice(reslist)
         if body["sortby"] == "LowPrice":
-            reslist = sortByPriceLow(reslist)
+            reslist = sortByPriceReverse(reslist)
         if body["sortby"] == "HighRate":
-            reslist = sortByRateHigh(reslist)
+            reslist = sortByRate(reslist)
         if body["sortby"] == "LowRate":
-            reslist = sortByRateLow(reslist)
+            reslist = sortByRateReverse(reslist)
     return reslist
 
 def requesttest():
