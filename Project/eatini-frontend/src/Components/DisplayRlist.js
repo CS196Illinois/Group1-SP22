@@ -28,19 +28,19 @@ const DisplayRlist = () => {
             <Row>
                 <Col style={{
                 width: "200",
-                backgroundColor: 'lightblue',
+                backgroundColor: 'lightcyan',
                 }}>
                 { restaurant.type }
             </Col>
                 <Col style={{
                 width: "500",
-                backgroundColor: 'lightgreen',
+                backgroundColor: 'HoneyDew',
                 }}>
                 { restaurant.rating }
             </Col>
                 <Col style={{
                 width: "500",
-                backgroundColor: 'violet',
+                backgroundColor: 'lavender',
                 }}>
                 { restaurant.acost }
             </Col>
@@ -49,7 +49,7 @@ const DisplayRlist = () => {
             <Row>
                 <Col style={{
                 width: "500",
-                backgroundColor: 'orange',
+                backgroundColor: 'LightSalmon',
                 }}>
                 🔻 Location: { restaurant.location }
                 </Col>

@@ -9,6 +9,7 @@ function App() {
       <div className = "content">
         {/* <Rlist title="name"></Rlist>
         <Rlist typeOfR="type"></Rlist> */}
+        <h4>🌟 You can consider about going to these restaurants 🌟</h4>
         <DisplayRlist />
       </div>
     </div>
