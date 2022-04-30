@@ -7,7 +7,6 @@ class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '',
             from: '',
             To: '',
             StartTime: '',
@@ -30,8 +29,34 @@ class Form extends React.Component {
 
     }
     handleSubmit(e) {
-        console.log(this.state);
         e.preventDefault()
+        console.log(this.state);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            mode: 'no-cors',
+            body: JSON.stringify({
+                radius: "2000",
+                rating: "1.0",
+                keyword: this.state.Cuisine,
+                timeinfo: {
+                    currentloc: this.state.from,
+                    destloc: this.state.To,
+                    eatingtime: this.state.EatingTime,
+                    starttime: "0",
+                    endtime: this.state.EndTime
+            }
+
+            })
+        };
+        console.log(requestOptions);
+
+        fetch('http://127.0.0.1:5000/restaurant', requestOptions).then(response => { 
+            console.log(response)
+            // console.log(data)
+        })
+        
 
     }
 
@@ -126,14 +151,14 @@ class Form extends React.Component {
                         value={this.state.To}
                         onChange={this.handleToChange}
                     />
-                    <label>Start Time:</label>
+                    {/* <label>Start Time:</label>
                     <input
                         type="text"
                         required
                         value={this.state.StartTime}
                         onChange={this.handleStartTimeChange}
-                    />
-                    <label>End Time:</label>
+                    /> */}
+                    <label>Total time (minutes):</label>
                     <input
                         type="text"
                         required
