@@ -1,6 +1,5 @@
 import React from "react";
 //import styled from "styled-components";
-import { View, Image, StyleSheet } from 'react-native';
 import eatinilogo from "./eatinilogo.jpg";
 
 const Logo = () => {
