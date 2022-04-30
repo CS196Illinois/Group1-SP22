@@ -24,11 +24,11 @@ def getTimeDurationOnFront(currentLoc, destLoc, mode = "walking"):
 
 def timefilter(reslist, currentLoc, destLoc, eatingtime, startingtime, endtime, mode = "walking"):
     filtered = []
-    duration = endtime - startingtime
+    duration = int(endtime) - int(startingtime)
     for res in reslist:
         firsttime = int(getTimeDuration(currentLoc, "place_id:" + res["place_id"])) /60
         secondtime = int(getTimeDuration("place_id:" + res["place_id"],destLoc)) /60
-        totaltime =  firsttime + secondtime + eatingtime
+        totaltime =  firsttime + secondtime + int(eatingtime)
         if totaltime < duration:
             res["ToResTime"] = firsttime
             res["ToDesTime"] = secondtime
@@ -93,8 +93,8 @@ def sortByName(reslist):
         swapped = False
         for i in range(len(reslist) - 1):
             if sorted[i]["name"] > sorted[i + 1]["name"]:
-                sorted[i], sorted[i + 1] = sorted[i + 1], sorted[i]
-                swapped = True
+               sorted[i], sorted[i + 1] = sorted[i + 1], sorted[i]
+               swapped = True
     return sorted
 
 def sortByNameReverse(reslist):
@@ -154,7 +154,7 @@ def sortByDistanceClose(reslist, currentLoc, destLoc):
 # main
 
 def respondRequest(body):
-    if "keyword" not in body.keys:
+    if "keyword" not in body:
         r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=40.110740,-88.219940&language=en&radius=" + str(body["radius"]) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
     else:
         r = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=" + body["keyword"] + "&location=40.110740,-88.219940&language=en&radius=" + str(body["radius"]) + "&sensor=false&key=AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE&types=restaurant")
@@ -163,14 +163,27 @@ def respondRequest(body):
     reslist = []
     for res in data["results"]:
         reslist.append(res)
-    if "rating" in body.keys:
+    if "opening" in body:
+        reslist = openingfilter(reslist)
+    if "rating" in body:
         reslist = ratingfilter(reslist, float(body["rating"]))
-    if "lowerprice" in body.keys:
+    if "lowerprice" in body:
         reslist = lowerpricefilter(reslist, float(body["lowerprice"]))
-    if "higherprice" in body.keys:
+    if "higherprice" in body:
         reslist = higherpricefilter(reslist, float(body["higherprice"]))
-    if "timeinfo" in body.keys:
+    if "timeinfo" in body:
         reslist = timefilter(reslist, body["timeinfo"]["currentloc"], body["timeinfo"]["destloc"], body["timeinfo"]["eatingtime"], body["timeinfo"]["starttime"], body["timeinfo"]["endtime"])
+    if "sortby" in body:
+        if body["sortby"] == "name":
+            reslist = sortByName(reslist)
+        if body["sortby"] == "HighPrice":
+            reslist = sortByPriceHigh(reslist)
+        if body["sortby"] == "LowPrice":
+            reslist = sortByPriceLow(reslist)
+        if body["sortby"] == "HighRate":
+            reslist = sortByRateHigh(reslist)
+        if body["sortby"] == "LowRate":
+            reslist = sortByRateLow(reslist)
     return reslist
 
 def requesttest():
