@@ -199,7 +199,7 @@ def requesttest():
 def home():
     return str(timefilter(requesttest(),"1301%W%Springfield%Ave%Urbana%IL", "603%S%Wright%St%Champaign%IL", 15, 50, 90))
 
-@app.route("/restaurant", methods=['GET'])
+@app.route("/restaurant", methods=['GET','POST'])
 def rest():
     data = request.get_json()
     print(data)
