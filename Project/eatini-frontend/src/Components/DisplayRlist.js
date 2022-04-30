@@ -14,7 +14,7 @@ const DisplayRlist = () => {
   return (
     <div className="displayrlist">
       {restaurants.map(restaurant => (
-        <div style={{ display: 'block', width:"400", padding: 20 }}>
+        <div style={{ display: 'block', width:"900", padding: 20 }}>
             <Row>
                 <Col style={{
                 width: "900",
@@ -58,7 +58,7 @@ const DisplayRlist = () => {
             <Row>
                 <Col style={{
                 width: "500",
-                backgroundColor: 'lightyellow',
+                backgroundColor: 'lavenderblush',
                 }}>
                 📋 Webiste: { restaurant.website }
                 </Col>
