@@ -35,7 +35,7 @@ class Form extends React.Component {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
-            mode: 'no-cors',
+            mode: 'cors',
             body: JSON.stringify({
                 radius: "2000",
                 rating: "1.0",
@@ -52,9 +52,15 @@ class Form extends React.Component {
         };
         console.log(requestOptions);
 
-        fetch('http://127.0.0.1:5000/restaurant', requestOptions).then(response => { 
-            console.log(response)
+        fetch('http://127.0.0.1:5000/restaurant', requestOptions)
+        // .then(response=>response.json())
+        .then(function(response) { 
+            // console.log(response.json())
+            var data = response.json();
+            return data
             // console.log(data)
+        }).then(function(parsedData) {
+            console.log(parsedData)
         })
         
 
