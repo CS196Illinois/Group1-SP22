@@ -1,6 +1,6 @@
 .create {
-  max-width: 200px;
-  margin: 0 auto;
+  max-width: 100px;
+  margin: -1 auto;
 }
 .create label {
   text-align: left;
