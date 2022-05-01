@@ -1,8 +1,9 @@
 from flask import Flask, render_template, jsonify, make_response, request
 import requests
 import json
-
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 API_KEY = "AIzaSyBwQIJgd3BTxyNA8ccg6vcplWGA5kWNbNE"
 
@@ -201,10 +202,23 @@ def home():
 
 @app.route("/restaurant", methods=['GET','POST'])
 def rest():
-    data = request.get_json()
-    print(data)
-    responsedata = respondRequest(data)
-    return make_response(jsonify(responsedata),200)
+    try:
+        print('hello world')
+        print(request.data)
+        print(json.loads(request.data))
+        data = json.loads(request.data)
+        print(data)
+        responsedata = respondRequest(data)
+        print(jsonify(responsedata))
+        print(responsedata)
+        print('line 213')
+        final_response = make_response(jsonify(responsedata),200)
+        # final_response = make_response(jsonify('hello world'),200)
+        final_response.headers['Access-Control-Allow-Origin'] = '*'
+        return final_response   
+    except Exception as ex:
+        print(repr(ex))
+        return(make_response('failed',400))
 
 @app.route("/restaurant/rating/<rating>")
 def rate(rating):
