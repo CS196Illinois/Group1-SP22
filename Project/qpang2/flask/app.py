@@ -201,9 +201,11 @@ def home():
 
 @app.route("/restaurant", methods=['GET','POST'])
 def rest():
+    print('line 204')
     data = request.get_json()
     print(data)
     responsedata = respondRequest(data)
+    print(responsedata)
     return make_response(jsonify(responsedata),200)
 
 @app.route("/restaurant/rating/<rating>")
