@@ -2,6 +2,7 @@ import React from "react";
 import './App.css';
 import DisplayRlist from "../DisplayRlist";
 import { useState } from "react";
+import { props } from "bluebird";
 class Form extends React.Component {
 
     constructor(props) {
@@ -28,7 +29,8 @@ class Form extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
-    handleSubmit(e) {
+
+    async handleSubmit(e) {
         e.preventDefault()
         console.log(this.state);
 
@@ -52,7 +54,7 @@ class Form extends React.Component {
         };
         console.log(requestOptions);
 
-        fetch('http://127.0.0.1:5000/restaurant', requestOptions)
+        const responseData = await fetch(' http://127.0.0.1:5000/restaurant', requestOptions)
         // .then(response=>response.json())
         .then(function(response) { 
             // console.log(response.json())
@@ -61,7 +63,10 @@ class Form extends React.Component {
             // console.log(data)
         }).then(function(parsedData) {
             console.log(parsedData)
+            return parsedData
         })
+        console.log(responseData)
+        this.props.setRestaurants(responseData)
         
 
     }
@@ -178,18 +183,18 @@ class Form extends React.Component {
                         value={this.state.EatingTime}
                         onChange={this.handleEatingTimeChange}
                     />
-                    <label>Cuisine:</label>
-                    <select>
-                        <option value=""></option>
+                    {/* <label>Cuisine:</label>
+                    <input
+                        type="text"
                         value={this.state.Cuisine}
                         onChange={this.handleCuisineChange}
-                    </select>
-                    <label>Price</label>
-                    <select>
+                    /> */}
+                    {/* <label>Price</label> */}
+                    {/* <select>
                         <option value=""></option>
                         value={this.state.Price}
                         onChange={this.handlePriceChange}
-                    </select>
+                    </select> */}
                     <button type="submit">Find Restaurants!</button>
                 </form>
             </div>
