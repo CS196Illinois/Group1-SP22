@@ -1,48 +1,57 @@
 import { type } from "@testing-library/user-event/dist/type";
-import { useState } from "react";
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-const DisplayRlist = () => {
-  const [restaurants, setRestaurants] = useState([
-    { title: 'Bagel', type: 'bagel shop', rating: '3.3', acost: '$', location: '809 S', website: 'einsteinbros.com', fromtot: '11', fromtom: '0.5', totot: '12', totom: '1.0'},
-    { title: 'Expresso', type: 'coffee shop', rating: '5.0', acost: '$', location: '1402 W', website: 'places.singlplatform.com', fromtot: '3', fromtom: '0.1', totot: '4', totom: '0.2'},
-  ])
+class DisplayRlist extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.restaurant = props.restaurants;
+    }
+
+
+
+
+//   useEffect(() => {
+//       console.log('use effect ran');
+//       console.log(restaurants);
+//   }, []);
+
+render() {
   return (
-    <div className="displayrlist">
-      {restaurants.map(restaurant => (
-        <div style={{ display: 'block', width:"400", padding: 20 }}>
+    <div>
+      {this.props.restaurants.map(restaurant => (
+        <div style={{ display: 'block', width:"900", padding: 20 }}>
             <Row>
                 <Col style={{
                 width: "900",
                 padding: 20,
                 backgroundColor: 'pink',
                 }}>
-                { restaurant.title }
+                { restaurant.name }
             </Col>
             </Row>
 
             <Row>
-                <Col style={{
+            {/* <Col style={{
                 width: "200",
                 backgroundColor: 'lightcyan',
                 }}>
                 { restaurant.type }
-            </Col>
+            </Col> */}
                 <Col style={{
                 width: "500",
                 backgroundColor: 'HoneyDew',
                 }}>
-                { restaurant.rating }
+                ⭐️ Rating: { restaurant.rating }
             </Col>
                 <Col style={{
                 width: "500",
                 backgroundColor: 'lavender',
                 }}>
-                { restaurant.acost }
+                💰 Average Price: { restaurant.price_level }
             </Col>
             </Row>
 
@@ -51,25 +60,25 @@ const DisplayRlist = () => {
                 width: "500",
                 backgroundColor: 'LightSalmon',
                 }}>
-                🔻 Location: { restaurant.location }
+                🔻 Location: { restaurant.vicinity }
                 </Col>
             </Row>
 
-            <Row>
+            {/* <Row>
                 <Col style={{
                 width: "500",
-                backgroundColor: 'lightyellow',
+                backgroundColor: 'lavenderblush',
                 }}>
                 📋 Webiste: { restaurant.website }
                 </Col>
-            </Row> 
+            </Row>  */}
 
             <Row>
                 <Col style={{
                 width: "500",
                 backgroundColor: 'lightyellow',
                 }}>
-                ⏰ From To: { restaurant.fromtot } min, { restaurant.fromtom } mile
+                ⏰ To Restaurant: { restaurant.ToResTime } min
                 </Col>
             </Row>
 
@@ -78,7 +87,7 @@ const DisplayRlist = () => {
                 width: "500",
                 backgroundColor: 'lightyellow',
                 }}>
-                ⏰ To To: { restaurant.totot } min, { restaurant.totom } mile
+                ⏰ From Restaurant: { restaurant.ToDesTime } min
                 </Col>
             </Row>
 
@@ -86,6 +95,7 @@ const DisplayRlist = () => {
         ))}
     </div>
   );
+ }
 }
  
 export default DisplayRlist;
